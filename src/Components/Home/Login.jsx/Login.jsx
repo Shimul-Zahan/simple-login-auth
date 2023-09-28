@@ -1,5 +1,5 @@
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import React, { useState } from 'react'
+import { sendPasswordResetEmail, signInWithEmailAndPassword } from 'firebase/auth';
+import React, { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import auth from '../../../Firebase/firebase.config';
 
@@ -7,6 +7,7 @@ const Login = () => {
 
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const emailRef = useRef(null)
 
   const handleLogIn = (e) => {
     e.preventDefault();
@@ -23,6 +24,21 @@ const Login = () => {
       .catch(error => {
         console.log(error)
         setError(error.message)
+    })
+  }
+
+  const handleForgotPassword = (e) => {
+    const email = emailRef.current.value;
+    if (!email) {
+      setError("Please enter a email");
+      return;
+    }
+    sendPasswordResetEmail(auth, email)
+      .then(res => {
+        alert('Cheek email to recover password.')
+      })
+      .catch(error => {
+      console.log(error)
     })
   }
 
@@ -49,6 +65,7 @@ const Login = () => {
                 <input
                   type="text"
                   name='email'
+                  ref={emailRef}
                   placeholder="email"
                   className="input input-bordered" 
                   required
@@ -66,7 +83,12 @@ const Login = () => {
                   required
                   />
                 <label className="label">
-                  <a href="#" className="label-text-alt link link-hover">Forgot password?</a>
+                  <a
+                    onClick={handleForgotPassword}
+                    href="#"
+                    className="label-text-alt link link-hover">
+                    Forgot password?
+                  </a>
                 </label>
               </div>
               <div className="form-control mt-6 mb-3">
