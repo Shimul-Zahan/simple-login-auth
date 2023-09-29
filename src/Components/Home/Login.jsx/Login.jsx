@@ -2,12 +2,14 @@ import { sendPasswordResetEmail, signInWithEmailAndPassword } from 'firebase/aut
 import React, { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import auth from '../../../Firebase/firebase.config';
+import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 
 const Login = () => {
 
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const emailRef = useRef(null)
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleLogIn = (e) => {
     e.preventDefault();
@@ -75,13 +77,20 @@ const Login = () => {
                 <label className="label">
                   <span className="label-text">Password</span>
                 </label>
-                <input
-                  type="password"
-                  placeholder="password"
-                  name='password'
-                  className="input input-bordered" 
-                  required
+                <div className='relative'>
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    placeholder="password"
+                    name='password'
+                    className="input input-bordered w-full"
+                    required
                   />
+                  <div onClick={() => setShowPassword(!showPassword)} className='absolute bottom-[15px] right-[10px]'>
+                    {
+                      showPassword ? <AiFillEye/> : <AiFillEyeInvisible/>
+                    }
+                  </div>
+                </div>
                 <label className="label">
                   <a
                     onClick={handleForgotPassword}
